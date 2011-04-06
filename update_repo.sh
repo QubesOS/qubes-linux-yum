@@ -4,10 +4,6 @@
 # $1 -- path to rpm dir
 check_repo()
 {
-    if ! [ $(ls -A "$1/*.rpm"  2>/dev/null) ] ; then
-        echo -n "Repo $1 is empty!"
-        return
-    fi
     if rpm --checksig $1/*.rpm | grep -v pgp > /dev/null ; then
         echo "ERROR: There are unsigned RPM packages in $1 repo:"
         echo "---------------------------------------"
@@ -25,7 +21,7 @@ update_repo()
 }
 
 
-for repo in r1-beta1/*/*; do
+for repo in r1-beta1/current/dom0 r1-beta1/current/vm/* r1-beta1/unstable/dom0 r1-beta1/unstable/vm/*; do
     echo "--> Processing repo: $repo..."
     check_repo $repo/rpm -o $repo/repodata || exit 1
     update_repo $repo -o $repo/repodata || exit 1
