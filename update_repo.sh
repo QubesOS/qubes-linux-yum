@@ -21,7 +21,7 @@ update_repo()
 }
 
 
-for repo in r1-beta1/current/dom0 r1-beta1/current/vm/* r1-beta1/unstable/dom0 r1-beta1/unstable/vm/*; do
+for repo in current-release/current/dom0 current-release/current/vm/* current-release/current-testing/dom0 current-release/current-testing/vm/* current-release/unstable/dom0 current-release/unstable/vm/*; do
     echo "--> Processing repo: $repo..."
     check_repo $repo/rpm -o $repo/repodata || exit 1
     update_repo $repo -o $repo/repodata || exit 1
