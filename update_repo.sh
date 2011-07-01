@@ -17,14 +17,24 @@ check_repo()
 
 update_repo()
 {
-    createrepo --update $1
+    createrepo --update $1 > /dev/null
 }
 
+is_repo_empty() {
+    ls $1/rpm/*.rpm > /dev/null 2>&1 || return 0
+    return 1
+}
 
-for repo in current-release/current/dom0 current-release/current/vm/* current-release/current-testing/dom0 current-release/current-testing/vm/* current-release/unstable/dom0 current-release/unstable/vm/*; do
-    echo "--> Processing repo: $repo..."
-    check_repo $repo/rpm -o $repo/repodata || exit 1
-    update_repo $repo -o $repo/repodata || exit 1
+REPOS_TO_UPDATE="current-release/current/dom0 current-release/current/vm/* current-release/current-testing/dom0 current-release/current-testing/vm/*"
+
+for repo in $REPOS_TO_UPDATE ; do
+    if is_repo_empty $repo ; then
+        echo "--> Skipping empty repo: $repo...";
+    else
+        echo "--> Processing repo: $repo..."
+        check_repo $repo/rpm -o $repo/repodata || exit 1
+        update_repo $repo -o $repo/repodata || exit 1
+    fi
 done
 echo Done.
 
