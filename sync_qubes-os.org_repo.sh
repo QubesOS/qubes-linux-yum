@@ -2,9 +2,16 @@
 
 DRY="-n"
 HOST=yum.qubes-os.org
+RELS_TO_SYNC="r1-beta1 r1-beta2"
+REPOS_TO_SYNC="current current-testing"
 
+for rel in $RELS_TO_SYNC; do
 
-echo "Syncing repos to remote host $HOST..."
-rsync $DRY --delete --partial --progress -air r1-beta1/current/* joanna@$HOST:/var/www/yum.qubes-os.org/r1-beta1/current/
-rsync $DRY --delete --partial --progress -air r1-beta1/current-testing/* joanna@$HOST:/var/www/yum.qubes-os.org/r1-beta1/current-testing/
+    for repo in $REPOS_TO_SYNC; do
+        echo
+        echo "Syncing $rel/$repo..."
+        rsync $DRY --delete --partial --progress -air $rel/$repo/* joanna@$HOST:/var/www/yum.qubes-os.org/$rel/$repo/
+    done
+
+done
 
