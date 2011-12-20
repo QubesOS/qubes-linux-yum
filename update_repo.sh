@@ -28,13 +28,11 @@ is_repo_empty() {
 REPOS_TO_UPDATE="current-release/current/dom0 current-release/current/vm/* current-release/current-testing/dom0 current-release/current-testing/vm/*"
 
 for repo in $REPOS_TO_UPDATE ; do
-    if is_repo_empty $repo ; then
-        echo "--> Skipping empty repo: $repo...";
-    else
-        echo "--> Processing repo: $repo..."
+    echo "--> Processing repo: $repo..."
+    if ! is_repo_empty $repo ; then
         check_repo $repo/rpm -o $repo/repodata || exit 1
-        update_repo $repo -o $repo/repodata || exit 1
     fi
+    update_repo $repo -o $repo/repodata || exit 1
 done
 echo Done.
 
