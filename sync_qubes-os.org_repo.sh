@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#DRY="-n"
+DRY="-n"
 HOST=yum.qubes-os.org
 RELS_TO_SYNC="r2"
 REPOS_TO_SYNC="current current-testing"
