@@ -17,7 +17,9 @@ check_repo()
 
 update_repo()
 {
-    createrepo --update $1 > /dev/null
+    OPTS=
+    [ -r "$1/comps.xml" ] && OPTS="-g comps.xml"
+    createrepo $OPTS --update $1 > /dev/null
 }
 
 is_repo_empty() {
