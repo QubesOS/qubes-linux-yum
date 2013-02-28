@@ -27,7 +27,7 @@ is_repo_empty() {
     return 1
 }
 
-REPOS_TO_UPDATE="current-release/current/dom0 current-release/current/vm/* current-release/current-testing/dom0 current-release/current-testing/vm/*"
+REPOS_TO_UPDATE="current-release/current/dom0 r1/current/dom0-upgrade-r2 current-release/current/vm/* current-release/current-testing/dom0 current-release/current-testing/vm/*"
 
 for repo in $REPOS_TO_UPDATE ; do
     echo "--> Processing repo: $repo..."
