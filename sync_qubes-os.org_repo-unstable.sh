@@ -2,7 +2,7 @@
 
 #DRY="-n"
 HOST=yum.qubes-os.org
-RELS_TO_SYNC="r1 r2"
+RELS_TO_SYNC="r1 r2-beta3"
 REPOS_TO_SYNC="unstable"
 
 for rel in $RELS_TO_SYNC; do
