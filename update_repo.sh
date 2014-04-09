@@ -5,6 +5,9 @@
 # $1 -- path to rpm dir
 check_repo()
 {
+    if [ "x$SKIP_REPO_CHECK" = "x1" ]; then
+        return 0
+    fi
     if rpm --checksig $1/*.rpm | grep -v pgp > /dev/null ; then
         echo "ERROR: There are unsigned RPM packages in $1 repo:"
         echo "---------------------------------------"
