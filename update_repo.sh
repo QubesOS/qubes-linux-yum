@@ -20,7 +20,7 @@ update_repo()
 {
     OPTS=
     [ -r "$1/comps.xml" ] && OPTS="-g comps.xml"
-    createrepo $OPTS --update $1 > /dev/null
+    createrepo $OPTS --update $@ > /dev/null
 }
 
 is_repo_empty() {
@@ -33,7 +33,7 @@ for repo in $REPOS_TO_UPDATE ; do
     if ! is_repo_empty $repo ; then
         check_repo $repo/rpm -o $repo/repodata || exit 1
     fi
-    update_repo $repo -o $repo/repodata || exit 1
+    update_repo $repo/rpm -o $repo/repodata || exit 1
 done
 echo Done.
 
