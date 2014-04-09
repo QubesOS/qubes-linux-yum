@@ -31,9 +31,9 @@ is_repo_empty() {
 for repo in $REPOS_TO_UPDATE ; do
     echo "--> Processing repo: $repo..."
     if ! is_repo_empty $repo ; then
-        check_repo $repo/rpm -o $repo/repodata || exit 1
+        check_repo $repo/rpm || exit 1
     fi
-    update_repo $repo/rpm -o $repo/repodata || exit 1
+    update_repo $repo/rpm -o $repo || exit 1
 done
 echo Done.
 
