@@ -3,7 +3,7 @@
 #DRY="-n"
 USERNAME=joanna
 HOST=yum.qubes-os.org
-RELS_TO_SYNC="r2-beta3"
+RELS_TO_SYNC="`readlink current-release|tr -d /`"
 REPOS_TO_SYNC="current current-testing"
 
 for rel in $RELS_TO_SYNC; do
