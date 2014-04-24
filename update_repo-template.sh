@@ -29,14 +29,14 @@ update_repo()
 }
 
 is_repo_empty() {
-    ls $1/rpm/*.rpm > /dev/null 2>&1 || return 0
+    ls $1/*.rpm > /dev/null 2>&1 || return 0
     return 1
 }
 
 for repo in $REPOS_TO_UPDATE ; do
     echo "--> Processing repo: $repo..."
     if ! is_repo_empty $repo ; then
-        check_repo $repo/rpm || exit 1
+        check_repo $repo || exit 1
     fi
     update_repo $repo || exit 1
 done
