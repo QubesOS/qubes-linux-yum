@@ -38,7 +38,7 @@ process_snapshot_file() {
             echo "Not signed package: $2/$f"
             continue 
         fi
-        $DRY ln $2/$f $3/
+        $DRY ln -f $2/$f $3/
     done
 }
         
