@@ -19,7 +19,9 @@ touch -t `date -d "$MIN_AGE days ago" +%Y%m%d%H%M` age-compare-file
 # $3 - destination dir
 process_snapshot_file() {
     if ! [ -r $1 ]; then
-        echo "Not existing snapshot, ignoring: `basename $1`"
+        if [ "$VERBOSE" -ge 1 ]; then
+            echo "Not existing snapshot, ignoring: `basename $1`"
+        fi
         return
     fi
     if [ $1 -nt age-compare-file ]; then
