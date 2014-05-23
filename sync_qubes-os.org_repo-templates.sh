@@ -1,5 +1,7 @@
 #!/bin/sh
 
+pushd `dirname $0`
+
 #DRY="-n"
 HOST=yum.qubes-os.org
 RELS_TO_SYNC="`readlink current-release|tr -d /`"
@@ -15,3 +17,4 @@ for rel in $RELS_TO_SYNC; do
 
 done
 
+popd

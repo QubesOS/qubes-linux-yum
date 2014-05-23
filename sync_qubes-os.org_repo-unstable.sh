@@ -1,5 +1,7 @@
 #!/bin/sh
 
+pushd `dirname $0`
+
 #DRY="-n"
 USERNAME=marmarek
 HOST=yum.qubes-os.org
@@ -18,3 +20,4 @@ for rel in $RELS_TO_SYNC; do
 
 done
 
+popd
