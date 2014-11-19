@@ -64,4 +64,8 @@ done
 
 rm -f age-compare-file
 
+if [ "$AUTOMATIC_UPLOAD" = 1 ]; then
+    `dirname $0`/sync_qubes-os.org_repo.sh
+fi
+
 echo Done.
