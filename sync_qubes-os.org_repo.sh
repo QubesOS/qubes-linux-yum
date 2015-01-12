@@ -6,7 +6,7 @@ pushd `dirname $0`
 USERNAME=joanna
 HOST=yum.qubes-os.org
 RELS_TO_SYNC="`readlink current-release|tr -d /`"
-REPOS_TO_SYNC="current current-testing"
+REPOS_TO_SYNC="current current-testing security-testing"
 
 for rel in $RELS_TO_SYNC; do
 
