@@ -5,7 +5,7 @@ pushd `dirname $0`
 #DRY="-n"
 HOST=yum.qubes-os.org
 RELS_TO_SYNC="`readlink current-release|tr -d /`"
-REPOS_TO_SYNC="templates-itl templates-community"
+REPOS_TO_SYNC="templates-community"
 
 for rel in $RELS_TO_SYNC; do
 
