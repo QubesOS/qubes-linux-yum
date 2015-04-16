@@ -1,6 +1,14 @@
 #!/bin/sh
 
-[ -z "$REPOS_TO_UPDATE" ] && REPOS_TO_UPDATE="current-release/templates-itl current-release/templates-community"
+if [ -n "$1" ]; then
+    current_release=$1
+else
+    current_release=current-release
+fi
+
+if [ -z "$REPOS_TO_UPDATE" ]; then
+    REPOS_TO_UPDATE="$current_release/templates-itl $current_release/templates-community"
+fi
 
 TEMPLATES_BASEURL="http://sourceforge.net/projects/qubesos/files"
 

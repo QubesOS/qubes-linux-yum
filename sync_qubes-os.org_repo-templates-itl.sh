@@ -4,7 +4,11 @@ pushd `dirname $0`
 
 #DRY="-n"
 HOST=yum.qubes-os.org
-RELS_TO_SYNC="`readlink current-release|tr -d /`"
+if [ -n "$1" ]; then
+    RELS_TO_SYNC=`basename "$1"`
+else
+    RELS_TO_SYNC="`readlink current-release|tr -d /`"
+fi
 REPOS_TO_SYNC="templates-itl"
 
 for rel in $RELS_TO_SYNC; do

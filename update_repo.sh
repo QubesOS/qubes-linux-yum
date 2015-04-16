@@ -1,6 +1,16 @@
 #!/bin/sh
 
-[ -z "$REPOS_TO_UPDATE" ] && REPOS_TO_UPDATE="current-release/current/dom0/fc* r1/current/dom0-upgrade-r2 current-release/current/vm/* current-release/current-testing/dom0/fc* current-release/current-testing/vm/*"
+if [ -n "$1" ]; then
+    current_release=$1
+else
+    current_release=current-release
+fi
+
+if [ -z "$REPOS_TO_UPDATE" ]; then
+    REPOS_TO_UPDATE="r1/current/dom0-upgrade-r2"
+    REPOS_TO_UPDATE="$REPOS_TO_UPDATE $current_release/current/dom0/fc* $current_release/current/vm/*"
+    REPOS_TO_UPDATE="$REPOS_TO_UPDATE $current_release/current-testing/dom0/fc* $current_release/current-testing/vm/*"
+fi
 
 # $1 -- path to rpm dir
 check_repo()

@@ -1,6 +1,10 @@
 #!/bin/sh
 
-RELS_TO_UPDATE="`readlink current-release|tr -d /`"
+if [ -n "$1" ]; then
+    RELS_TO_UPDATE=`basename "$1"`
+else
+    RELS_TO_UPDATE="`readlink current-release|tr -d /`"
+fi
 MIN_AGE=7
 #DRY=echo
 
@@ -65,7 +69,7 @@ done
 rm -f age-compare-file
 
 if [ "$AUTOMATIC_UPLOAD" = 1 ]; then
-    `dirname $0`/sync_qubes-os.org_repo.sh
+    `dirname $0`/sync_qubes-os.org_repo.sh "$1"
 fi
 
 echo Done.
