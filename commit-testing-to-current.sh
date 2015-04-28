@@ -1,7 +1,7 @@
 #!/bin/sh
 
-if [ -n "$1" ]; then
-    RELS_TO_UPDATE=`basename "$1"`
+if [ -n "$3" ]; then
+    RELS_TO_UPDATE=`basename "$3"`
 else
     RELS_TO_UPDATE="`readlink current-release|tr -d /`"
 fi
@@ -9,7 +9,7 @@ MIN_AGE=7
 #DRY=echo
 
 if [ -z "$1" ]; then
-    echo "Usage: $0 <path-to-current-testing-repo-snapshot> [<component list>]"
+    echo "Usage: $0 <path-to-current-testing-repo-snapshot> [\"<component list>\" [<release-name>]]"
     exit 1
 fi
 
@@ -69,7 +69,7 @@ done
 rm -f age-compare-file
 
 if [ "$AUTOMATIC_UPLOAD" = 1 ]; then
-    `dirname $0`/sync_qubes-os.org_repo.sh "$1"
+    `dirname $0`/sync_qubes-os.org_repo.sh "$3"
 fi
 
 echo Done.
