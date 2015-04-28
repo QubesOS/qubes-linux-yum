@@ -10,7 +10,7 @@ if [ -z "$REPOS_TO_UPDATE" ]; then
     REPOS_TO_UPDATE="$current_release/templates-itl $current_release/templates-community"
 fi
 
-TEMPLATES_BASEURL="http://sourceforge.net/projects/qubesos/files"
+TEMPLATES_BASEURL="http://sourceforge.net/projects/qubesos/files/rpm/$current_release"
 
 # $1 -- path to rpm dir
 check_repo()
