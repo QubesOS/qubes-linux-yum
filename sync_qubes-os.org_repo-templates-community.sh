@@ -16,7 +16,7 @@ for rel in $RELS_TO_SYNC; do
     for repo in $REPOS_TO_SYNC; do
         echo
         echo "Syncing $rel/$repo..."
-        rsync $DRY --partial --progress -air $rel/$repo/repodata $HOST:/var/www/yum.qubes-os.org/$rel/$repo/
+        rsync $DRY --partial --progress -air $rel/$repo/repodata $HOST:/pub/qubes/repo/yum/$rel/$repo/
     done
 
 done
