@@ -14,12 +14,14 @@ REPOS_TO_SYNC="unstable"
 
 for rel in $RELS_TO_SYNC; do
 
+    rsync_args=
     for repo in $REPOS_TO_SYNC; do
-        echo
-        echo "Syncing $rel/$repo..."
-        rsync $DRY --partial --progress --exclude repodata -air $rel/$repo/* $HOST:/var/www/yum.qubes-os.org/$rel/$repo/
-        rsync $DRY --partial --progress --exclude repodata -air $rel/$repo/* $HOST:$HOST_BASEDIR/$rel/$repo/
-        rsync $DRY update_repo.sh update_repo-arg.sh $HOST:
+        rsync_args="$rsync_args $rel/$repo"
+    done
+    echo "Syncing $rel..."
+    rsync $DRY --partial --progress --hard-links --exclude repodata -air $rsync_args $HOST:$HOST_BASEDIR/$rel/
+    rsync $DRY update_repo.sh update_repo-arg.sh $HOST:
+    for repo in $REPOS_TO_SYNC; do
         [ -z "$DRY" ] && ssh $HOST ./update_repo-arg.sh "$HOST_BASEDIR/$rel/$repo/dom0/fc*" "$HOST_BASEDIR/$rel/$repo/vm/fc*"
     done
 
