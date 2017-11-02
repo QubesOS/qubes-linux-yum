@@ -10,8 +10,8 @@ usage() {
 }
 
 #DRY="-n"
-HOST=yum.qubes-os.org
-HOST_BASEDIR=/pub/qubes/repo/yum
+[ "x$HOST" == "x" ] && HOST=yum.qubes-os.org
+[ "x$HOST_BASEDIR" == "x" ] && HOST_BASEDIR=/pub/qubes/repo/yum
 if [ -n "$1" ]; then
     RELS_TO_SYNC=`basename "$1"`
     shift
