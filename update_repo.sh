@@ -15,13 +15,21 @@ fi
 # $1 -- path to rpm dir
 check_repo()
 {
+    RPM_VERSION="$(rpm --version | awk '{print $3}')"
+
+    if [ "$(printf '%s\n' "$RPM_VERSION" "4.14.0" | sort -V | head -n1)" == "4.14.0" ]; then
+        PGP_NOTSIGNED='signatures OK'
+    else
+        PGP_NOTSIGNED='pgp'
+    fi
+
     if [ "x$SKIP_REPO_CHECK" = "x1" ]; then
         return 0
     fi
-    if rpm --checksig $1/*.rpm | grep -v pgp > /dev/null ; then
+    if rpm --checksig $1/*.rpm | grep -v "$PGP_NOTSIGNED" > /dev/null ; then
         echo "ERROR: There are unsigned RPM packages in $1 repo:"
         echo "---------------------------------------"
-        rpm --checksig $1/*.rpm | grep -v pgp 
+        rpm --checksig $1/*.rpm | grep -v "$PGP_NOTSIGNED"
         echo "---------------------------------------"
         echo "Sign them before proceeding."
         exit 1
