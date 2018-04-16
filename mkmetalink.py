@@ -148,7 +148,6 @@ class RepoMD:
         Mirrors which apparently do not mirror this repo are silently dropped.
         '''
         for mirror in mirrors:
-            sys.stderr.write('mirror={!r}\n'.format(mirror))
             try:
                 relpath = self.path.relative_to(base / mirror.subdir)
             except ValueError:
