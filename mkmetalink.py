@@ -1,10 +1,7 @@
-#!/usr/bin/env python2
-
+#!/usr/bin/env python3
 #
-# The Qubes OS Project, https://www.qubes-os.org/
-#
-# Copyright (C) 2015  Joanna Rutkowska <joanna@invisiblethingslab.com>
-# Copyright (C) 2015  Wojtek Porczyk <woju@invisiblethingslab.com>
+# mkmetalink.py -- generate simple metalink for yum repo
+# Copyright (C) 2015-2018  Wojtek Porczyk <woju@invisiblethingslab.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,15 +18,19 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
+'''Simple generator of metalinks for yum repos, as used in Qubes OS infra.'''
+
+__version__ = '2.0'
 
 import argparse
+import datetime
 import hashlib
-import os
+import operator
+import pathlib
 import posixpath
 import sys
-import time
-import urllib #.parse #python3
 
+import jinja2
 import lxml.etree
 
 DEFAULT_HASHES = [
@@ -40,149 +41,161 @@ DEFAULT_HASHES = [
     'ripemd160',
 ]
 
-DEFAULT_MIRRORS = [
-    'http://ftp.qubes-os.org/repo/yum/',
-    'http://mirrors.kernel.org/qubes/repo/yum/',
-]
+METALINK3 = jinja2.Template('''\
+<?xml version="1.0" encoding="utf-8"?>
+<metalink version="3.0"
+        generator="{{ generator }}"
+        pubdate="{{ utcnow.strftime('%a, %d %b %Y %H:%M:%S GMT') }}"
+        xmlns="http://www.metalinker.org/"
+        xmlns:mm0="http://fedorahosted.org/mirrormanager">
 
-__version__ = '1.0'
+    <files>
+        <file name="{{ file.path.name }}">
+            <mm0:timestamp>{{ file.timestamp }}</mm0:timestamp>
+            <size>{{ file.stat.st_size }}</size>
+            <resources>
+            {%- for url in urls %}
+                <url>{{ url }}</url>
+            {%- endfor %}
+            </resources>
+            <verification>
+            {%- for hashtype in hashtypes %}
+                <hash type="{{ hashtype }}">{{ file.get_hash(hashtype) }}</hash>
+            {%- endfor %}
+            </verification>
+        </file>
+    </files>
+</metalink>
+''')
 
+#
+# RFC5854-compliant metalink, in case someone in Fedora decided to update
+#
+METALINK4 = jinja2.Template('''\
+<?xml version="1.0" encoding="utf-8"?>
+<metalink
+        xmlns="urn:ietf:params:xml:ns:metalink"
+        xmlns:mm0="http://fedorahosted.org/mirrormanager">
+    <generator>{{ generator }}</generator>
+    <published>{{ utcnow.strftime('%Y-%m-%dT%H:%M:%SZ') }}</published>
 
-class Metalink(object):
-    def __init__(self, path):
-        self.path = os.path.relpath(os.path.realpath(path))
-        stat = os.stat(self.filename)
+    <files>
+        <file name="{{ file.path.name }}">
+            <mm0:timestamp>{{ file.timestamp }}</mm0:timestamp>
+            <size>{{ file.stat.st_size }}</size>
+            {%- for url in urls %}
+            <url>{{ url }}</url>
+            {%- endfor %}
+            {%- for hashtype in hashtypes %}
+            <hash type="{{ hashtype }}">{{ file.get_hash(hashtype) }}</hash>
+            {%- endfor %}
+        </file>
+    </files>
+</metalink>
+''')
 
-        self.root = lxml.etree.Element('metalink',
-            nsmap={
-                None: 'http://www.metalinker.org/',
-                'mm0': 'http://fedorahosted.org/mirrormanager',
-            },
-            version='3.0',
-            generator='mkmetalink/{}'.format(__version__))
+parser = argparse.ArgumentParser()
 
-        files = self._element('files')
-        self.root.append(files)
+parser.add_argument('--metalink', '-3',
+    action='store_const',
+    dest='format',
+    const=METALINK3,
+    help=argparse.SUPPRESS)
 
-        self.repomd = self._element('file', name='repomd.xml')
-        files.append(self.repomd)
-
-        self.add_timestamp()
-
-        self.repomd.append(self._element('size',
-            str(stat.st_size)))
-
-        self.verification = self._element('verification')
-        self.repomd.append(self.verification)
-
-        self.resources = self._element('resources')
-        self.repomd.append(self.resources)
-
-
-    @staticmethod
-    def _element(_tag, _text=None, **kwargs):
-        element = lxml.etree.Element(_tag, **kwargs)
-        if _text is not None:
-            element.text = _text
-        return element
-
-
-    @property
-    def filename(self):
-        return os.path.join(self.path, 'repodata', 'repomd.xml')
-
-
-    def add_timestamp(self):
-        xml = lxml.etree.parse(self.filename)
-        timestamp = max(int(e.text)
-            for e in xml.xpath('/repomd:repomd/repomd:data/repomd:timestamp',
-                namespaces={'repomd': 'http://linux.duke.edu/metadata/repo'}))
-        self.repomd.append(self._element(
-            '{http://fedorahosted.org/mirrormanager}timestamp',
-            str(timestamp)))
-
-
-
-    def add_hash(self, algo):
-        h = hashlib.new(algo)
-        f = open(self.filename, 'rb')
-
-        while True:
-            data = f.read(1024)
-            if not data:
-                break
-            h.update(data)
-
-        f.close()
-
-        element = lxml.etree.Element('hash', type=algo)
-        element.text = h.hexdigest()
-        self.verification.append(element)
-
-        return element
-
-
-    def add_resource(self, mirror):
-#       scheme = urllib.parse.urlsplit(mirror)[0] #python3
-        scheme = urllib.splittype(mirror)[0] #python2
-        element = lxml.etree.Element('url', protocol=scheme, type=scheme)
-        element.text = posixpath.join(mirror, self.filename)
-        self.resources.append(element)
-
-        return element
-
-
-    def write(self, stream):
-        return lxml.etree.ElementTree(self.root).write(
-            stream, encoding='utf-8', pretty_print=True)
-
-
-    def save(self):
-        self.write(open(os.path.join(self.path, 'metalink'), 'wb'))
-
-
-parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter,
-    epilog='default mirrors: {}\ndefault hashes:  {}'.format(
-        ', '.join(DEFAULT_MIRRORS), ', '.join(DEFAULT_HASHES)))
+parser.add_argument('--meta4', '-4',
+    action='store_const',
+    dest='template',
+    const=METALINK4,
+    help=argparse.SUPPRESS)
 
 parser.add_argument('--base', '--cwd', '-b', metavar='PATH',
+    type=pathlib.Path,
     help='base directory for repositories (default: %(default)r)')
 
-parser.add_argument('--hash', '-H', metavar='ALGO',
-    action='append',
-    help='hash files with this algorithm; can be repeated')
+parser.add_argument('mirrors', metavar='MIRRORLIST',
+    type=pathlib.Path,
+    help='file to read the mirror list from')
 
-parser.add_argument('--mirrorlist', '-M', metavar='FILE',
-    help='mirror file containing list of mirrors')
+parser.add_argument('repomd', metavar='REPOMD',
+    type=pathlib.Path,
+    help='paths to repomd.xmls to generate metalink for')
 
-parser.add_argument('repo', metavar='REPOSITORY',
-    help='path to repository relative to --base,\n'
-        'for example r3.0/current-testing/dom0/fc20')
+parser.set_defaults(template=METALINK3, base='.')
 
-parser.set_defaults(base='.')
+class RepoMD:
+    '''A representation of repomd.xml file'''
+    def __init__(self, path):
+        self.path = path
+        self.stat = self.path.stat()
+        assert self.stat.st_size < 1e7, 'memory protection safeguard'
+        # the assert is because we read the file into memory:
+        self.contents = self.path.read_bytes()
+        self.timestamp = self._get_timestamp()
 
+    def _get_timestamp(self):
+        xml = lxml.etree.XML(self.contents)
+        return max(int(e.text)
+            for e in xml.xpath('/repomd:repomd/repomd:data/repomd:timestamp',
+                namespaces={'repomd': 'http://linux.duke.edu/metadata/repo'}))
 
-def main():
+    def get_hash(self, algo):
+        '''Get a hash of the contents of the file.'''
+        return hashlib.new(algo, self.contents).hexdigest()
+
+    def get_urls_for_mirrors(self, base, mirrors):
+        '''Given base path and list of mirrors, yield all urls for mirrors.
+
+        Mirrors which apparently do not mirror this repo are silently dropped.
+        '''
+        for mirror in mirrors:
+            sys.stderr.write('mirror={!r}\n'.format(mirror))
+            try:
+                relpath = self.path.relative_to(base / mirror.subdir)
+            except ValueError:
+                # path is not inside base/subdir, so it is not mirrored here
+                continue
+            yield posixpath.join(mirror.url, str(relpath))
+
+class Mirror(tuple):
+    def __new__(cls, url, subdir='.'):
+        return super().__new__(cls, (url, subdir))
+    def __repr__(self):
+        return '{}(url={!r}, subdir={!r})'.format(
+            type(self).__name__, self.url, self.subdir)
+    url = property(operator.itemgetter(0))
+    subdir = property(operator.itemgetter(1))
+
+def read_mirrors(path):
+    '''Read mirror file
+
+    Format:
+        - one mirror URL per line
+        - after whitespace, optional subdirectory
+            (if it does not mirror whole ``--base``)
+        - empty and ``#`` lines are ignored
+    '''
+    with open(str(path)) as file:
+        for line in file:
+            line = line.strip()
+            if not line or line[0] == '#':
+                continue
+            yield Mirror(*line.split())
+
+def main(args=None):
     args = parser.parse_args()
+    repomd = RepoMD(args.repomd)
+    urls = list(
+        repomd.get_urls_for_mirrors(args.base, read_mirrors(args.mirrors)))
+    assert urls, 'this file is not mirrored by any repo'
 
-    os.chdir(args.base)
-    metalink = Metalink(args.repo)
-
-    hashes = args.hash or DEFAULT_HASHES
-    for algo in hashes:
-        metalink.add_hash(algo)
-
-    mirrors = open(args.mirrorlist).read().strip().split() \
-        if args.mirrorlist is not None \
-        else DEFAULT_MIRRORS
-    for mirror in mirrors:
-        metalink.add_resource(mirror)
-
-    metalink.save()
-
+    sys.stdout.write(args.template.render(
+        file=repomd,
+        hashtypes=DEFAULT_HASHES,
+        urls=urls,
+        utcnow=datetime.datetime.utcnow(),
+        generator='mkmetalink/{}'.format(__version__),
+    ))
+    sys.stdout.close()
 
 if __name__ == '__main__':
     main()
-
-
-# vim: ts=4 sts=4 sw=4 et
