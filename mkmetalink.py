@@ -98,7 +98,7 @@ parser = argparse.ArgumentParser()
 
 parser.add_argument('--metalink', '-3',
     action='store_const',
-    dest='format',
+    dest='template',
     const=METALINK3,
     help=argparse.SUPPRESS)
 
