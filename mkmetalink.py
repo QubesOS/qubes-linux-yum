@@ -181,7 +181,7 @@ def read_mirrors(path):
             yield Mirror(*line.split())
 
 def main(args=None):
-    args = parser.parse_args()
+    args = parser.parse_args(args)
     repomd = RepoMD(args.repomd)
     urls = list(
         repomd.get_urls_for_mirrors(args.base, read_mirrors(args.mirrors)))
