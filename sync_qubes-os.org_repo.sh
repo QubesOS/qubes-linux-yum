@@ -20,9 +20,9 @@ for rel in $RELS_TO_SYNC; do
     done
     echo "Syncing $rel..."
     rsync $DRY --partial --progress --hard-links --exclude repodata -air $rsync_args $HOST:$HOST_BASEDIR/$rel/
-    rsync $DRY update_repo.sh update_repo-arg.sh $HOST:
+    rsync $DRY update_repo.sh update_repo-arg.sh mirrors.list mkmetalink.py $HOST:
     for repo in $REPOS_TO_SYNC; do
-        [ -z "$DRY" ] && ssh $HOST ./update_repo-arg.sh "$HOST_BASEDIR/$rel/$repo/dom0/fc*" "$HOST_BASEDIR/$rel/$repo/vm/*"
+        [ -z "$DRY" ] && ssh $HOST sh -c "\"cd $HOST_BASEDIR; ~/update_repo-arg.sh $rel/$repo/dom0/fc* $rel/$repo/vm/*\""
     done
 
 done

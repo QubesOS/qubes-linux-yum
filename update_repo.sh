@@ -12,6 +12,9 @@ if [ -z "$REPOS_TO_UPDATE" ]; then
     REPOS_TO_UPDATE="$REPOS_TO_UPDATE $current_release/current-testing/dom0/fc* $current_release/current-testing/vm/*"
 fi
 
+mkmetalink=$(realpath "$(dirname "$0")/mkmetalink.py")
+mirrors_list=$(realpath "$(dirname "$0")/mirrors.list")
+
 # $1 -- path to rpm dir
 check_repo()
 {
@@ -42,6 +45,10 @@ update_repo()
     OPTS=
     [ -r "$1/comps.xml" ] && OPTS="-g comps.xml"
     createrepo $OPTS --update -x 'fc*/*' -o $1 $1 >/dev/null
+    if [ -x "$mkmetalink" -a -r "$mirrors_list" ]; then
+        $mkmetalink $mirrors_list "$1/repodata/repomd.xml" \
+            > "$1/repodata/repomd.xml.metalink"
+    fi
 }
 
 is_repo_empty() {
