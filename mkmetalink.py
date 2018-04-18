@@ -53,7 +53,7 @@ METALINK3 = jinja2.Template('''\
         <file name="{{ file.path.name }}">
             <mm0:timestamp>{{ file.timestamp }}</mm0:timestamp>
             <size>{{ file.stat.st_size }}</size>
-            <resources>
+            <resources maxconnections="1">
             {%- for url in urls %}
                 <url>{{ url }}</url>
             {%- endfor %}
