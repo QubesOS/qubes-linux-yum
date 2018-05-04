@@ -12,7 +12,7 @@ if [ -z "$REPOS_TO_UPDATE" ]; then
     REPOS_TO_UPDATE="$REPOS_TO_UPDATE $current_release/current-testing/dom0/fc* $current_release/current-testing/vm/*"
 fi
 
-mkmetalink=$(realpath "$(dirname "$0")/mkmetalink.py")
+mkmetalink=$(which mkmetalink)
 mirrors_list=$(realpath "$(dirname "$0")/mirrors.list")
 
 # $1 -- path to rpm dir
