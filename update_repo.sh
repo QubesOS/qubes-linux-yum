@@ -20,7 +20,7 @@ check_repo()
 {
     RPM_VERSION="$(rpm --version | awk '{print $3}')"
 
-    if [ "$(printf '%s\n' "$RPM_VERSION" "4.14.0" | sort -V | head -n1)" == "4.14.0" ]; then
+    if [ "$(printf '%s\n' "$RPM_VERSION" "4.14.0" | sort -V | head -n1)" = "4.14.0" ]; then
         PGP_NOTSIGNED='signatures OK'
     else
         PGP_NOTSIGNED='pgp'
