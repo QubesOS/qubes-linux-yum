@@ -12,6 +12,7 @@ if [ -z "$REPOS_TO_UPDATE" ]; then
     REPOS_TO_UPDATE="$REPOS_TO_UPDATE $current_release/current-testing/dom0/fc* $current_release/current-testing/vm/*"
 fi
 
+createrepo=$(which createrepo_c createrepo |head -n 1)
 mkmetalink=$(which mkmetalink)
 mirrors_list=$(realpath "$(dirname "$0")/mirrors.list")
 
@@ -44,7 +45,7 @@ update_repo()
 {
     OPTS=
     [ -r "$1/comps.xml" ] && OPTS="-g comps.xml"
-    createrepo $OPTS --update -x 'fc*/*' -o $1 $1 >/dev/null
+    $createrepo $OPTS --update -x 'fc*/*' -o $1 $1 >/dev/null
     if [ -x "$mkmetalink" -a -r "$mirrors_list" ]; then
         $mkmetalink $mirrors_list "$1/repodata/repomd.xml" \
             > "$1/repodata/repomd.xml.metalink"
