@@ -16,6 +16,11 @@ createrepo=$(which createrepo_c createrepo |head -n 1)
 mkmetalink=$(which mkmetalink)
 mirrors_list=$(realpath "$(dirname "$0")/mirrors.list")
 
+if [ -z "$createrepo" ]; then
+    echo "ERROR: createrepo not found"
+    exit 1
+fi
+
 # $1 -- path to rpm dir
 check_repo()
 {
