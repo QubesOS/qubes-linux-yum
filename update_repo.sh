@@ -21,6 +21,10 @@ if [ -z "$createrepo" ]; then
     exit 1
 fi
 
+if [ -d "$BUILDER_DIR/keyrings/rpmdb" ]; then
+    RPM_OPTS="$RPM_OPTS --dbpath=$BUILDER_DIR/keyrings/rpmdb"
+fi
+
 # $1 -- path to rpm dir
 check_repo()
 {
@@ -35,10 +39,10 @@ check_repo()
     if [ "x$SKIP_REPO_CHECK" = "x1" ]; then
         return 0
     fi
-    if rpm --checksig $1/*.rpm | grep -v "$PGP_NOTSIGNED" > /dev/null ; then
+    if rpm $RPM_OPTS --checksig $1/*.rpm | grep -v "$PGP_NOTSIGNED" > /dev/null ; then
         echo "ERROR: There are unsigned RPM packages in $1 repo:"
         echo "---------------------------------------"
-        rpm --checksig $1/*.rpm | grep -v "$PGP_NOTSIGNED"
+        rpm $RPM_OPTS --checksig $1/*.rpm | grep -v "$PGP_NOTSIGNED"
         echo "---------------------------------------"
         echo "Sign them before proceeding."
         exit 1
