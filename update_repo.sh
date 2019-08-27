@@ -21,6 +21,7 @@ if [ -z "$createrepo" ]; then
     exit 1
 fi
 
+RPM_OPTS=
 if [ -d "$BUILDER_DIR/keyrings/rpmdb" ]; then
     RPM_OPTS="$RPM_OPTS --dbpath=$BUILDER_DIR/keyrings/rpmdb"
 fi
