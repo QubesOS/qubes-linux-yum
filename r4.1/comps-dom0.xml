@@ -50,8 +50,9 @@
       <packagereq>firewalld</packagereq>
       <packagereq>gfs2-utils</packagereq>
       <packagereq>glibc-all-langpacks</packagereq>
-      <packagereq>grub2</packagereq>
-      <packagereq>grub2-efi</packagereq>
+      <packagereq>grub2-pc</packagereq>
+      <packagereq>grub2-efi-x64</packagereq>
+      <packagereq>grub2-tools-efi</packagereq>
       <packagereq>hfsplus-tools</packagereq>
       <packagereq>iscsi-initiator-utils</packagereq>
       <packagereq>lvm2</packagereq>
@@ -59,7 +60,7 @@
       <packagereq>mdadm</packagereq>
       <packagereq>ntfsprogs</packagereq>
       <packagereq>reiserfs-utils</packagereq>
-      <packagereq>shim</packagereq>
+      <packagereq>shim-x64</packagereq>
       <packagereq>syslinux-extlinux</packagereq>
       <packagereq>xfsprogs</packagereq>
     </packagelist>
@@ -80,7 +81,7 @@
       <packagereq type="mandatory">dump</packagereq>
       <packagereq type="mandatory">ed</packagereq>
       <packagereq type="mandatory">gnupg2</packagereq>
-      <packagereq type="mandatory">grub2-starfield-theme</packagereq>
+      <packagereq type="mandatory">grub2-qubes-theme</packagereq>
       <packagereq type="mandatory">irqbalance</packagereq>
       <packagereq type="mandatory">linux-firmware</packagereq>
       <packagereq type="mandatory">logrotate</packagereq>
@@ -117,8 +118,10 @@
       <packagereq type="mandatory">util-linux</packagereq>
       <packagereq type="mandatory">vim-enhanced</packagereq>
       <packagereq type="mandatory">which</packagereq>
-      <packagereq type="mandatory">yum-utils</packagereq>
+      <packagereq type="mandatory">dnf-utils</packagereq>
       <packagereq type="mandatory">zip</packagereq>
+      <packagereq type="mandatory">annobin</packagereq>
+      <packagereq type="mandatory">authselect</packagereq>
     </packagelist>
   </group>
   <group>
@@ -1315,7 +1318,7 @@
       <packagereq>xfwm4-themes</packagereq>
       <packagereq>xfwm4</packagereq>
       <packagereq>xscreensaver-base</packagereq>
-      <packagereq>yumex-dnf</packagereq>
+      <packagereq>dnfdragora</packagereq>
       <packagereq>zenity</packagereq>
     </packagelist>
   </group>
@@ -1393,32 +1396,48 @@
       <packagereq type="mandatory">kernel-qubes-vm</packagereq>
       <packagereq type="mandatory">kernel</packagereq>
       <packagereq type="mandatory">qubes-artwork</packagereq>
-      <packagereq type="mandatory">qubes-core-dom0-doc</packagereq>
       <packagereq type="mandatory">qubes-core-dom0</packagereq>
-      <packagereq type="mandatory">qubes-desktop-linux-common</packagereq>
+      <packagereq type="mandatory">qubes-audio-dom0</packagereq>
       <packagereq type="mandatory">qubes-gui-dom0</packagereq>
+      <packagereq type="mandatory">qubes-desktop-linux-common</packagereq>
       <packagereq type="mandatory">qubes-desktop-linux-manager</packagereq>
       <packagereq type="mandatory">qubes-mgmt-salt-dom0</packagereq>
-      <packagereq type="mandatory">qubes-template-fedora-25</packagereq>
+      <packagereq type="mandatory">qubes-template-fedora-30</packagereq>
       <packagereq type="default">qubes-gpg-split-dom0</packagereq>
       <packagereq type="default">qubes-img-converter-dom0</packagereq>
       <packagereq type="default">qubes-input-proxy</packagereq>
       <packagereq type="default">qubes-pdf-converter-dom0</packagereq>
       <packagereq type="default">qubes-usb-proxy-dom0</packagereq>
+      <packagereq type="default">libvirt-client</packagereq>
+      <!--
+      We add 'kernel-latest' and 'kernel-latest-qubes-vm' only as
+      optional because it is not included in stable official releases
+      but only in testing releases with latest kernels
+      -->
+      <packagereq type="optional">kernel-latest</packagereq>
+      <packagereq type="optional">kernel-latest-qubes-vm</packagereq>
     </packagelist>
   </group>
-
   <group>
-    <id>debian-8</id>
-    <name>Debian 8 (jessie) template</name>
-    <description>Debian 8 (jessie) template</description>
+    <id>qubes-ui</id>
+    <name>Qubes UI (Audio/Gui)</name>
     <default>true</default>
     <uservisible>true</uservisible>
     <packagelist>
-      <packagereq>qubes-template-debian-8</packagereq>
+      <packagereq type="mandatory">qubes-audio-daemon</packagereq>
+      <packagereq type="mandatory">qubes-gui-daemon</packagereq>
     </packagelist>
   </group>
-
+  <group>
+    <id>debian</id>
+    <name>Debian 10 (buster) template</name>
+    <description>Debian 10 (buster) template</description>
+    <default>true</default>
+    <uservisible>true</uservisible>
+    <packagelist>
+      <packagereq>qubes-template-debian-10</packagereq>
+    </packagelist>
+  </group>
   <group>
     <id>whonix</id>
     <name>Whonix</name>
@@ -1426,11 +1445,10 @@
     <description>Whonix templates (gateway and workstation)</description>
     <uservisible>true</uservisible>
     <packagelist>
-      <packagereq>qubes-template-whonix-gw</packagereq>
-      <packagereq>qubes-template-whonix-ws</packagereq>
+      <packagereq>qubes-template-whonix-gw-15</packagereq>
+      <packagereq>qubes-template-whonix-ws-15</packagereq>
     </packagelist>
   </group>
-
   <environment>
    <id>qubes-xfce</id>
    <display_order>3</display_order>
@@ -1448,7 +1466,7 @@
      <groupid>xfce-media</groupid>
     </grouplist>
     <optionlist>
-     <groupid default='true'>debian-8</groupid>
+     <groupid default='true'>debian</groupid>
      <groupid default='true'>whonix</groupid>
     </optionlist>
   </environment>
