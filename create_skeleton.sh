@@ -26,6 +26,6 @@ then
         touch "$release/$repo/$package_set/$dist/repodata/.gitignore"
         touch "$release/$repo/$package_set/$dist/rpm/.gitignore"
 
-        ln -s "comps-${package_set}.xml" "$release/$repo/$package_set/$dist"
+        ln -s "../../../comps-${package_set}.xml" "$release/$repo/$package_set/$dist/comps.xml"
     done
 fi
