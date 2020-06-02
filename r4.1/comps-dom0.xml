@@ -1278,48 +1278,47 @@
     <default>true</default>
     <uservisible>false</uservisible>
     <packagelist>
-      <packagereq>adwaita-cursor-theme</packagereq>
       <packagereq>adwaita-gtk2-theme</packagereq>
       <packagereq>adwaita-icon-theme</packagereq>
       <packagereq>albatross-gtk2-theme</packagereq>
       <packagereq>albatross-gtk3-theme</packagereq>
       <packagereq>albatross-xfwm4-theme</packagereq>
       <packagereq>alsa-utils</packagereq>
+      <packagereq>arc-theme</packagereq>
+      <packagereq>blueberry</packagereq>
       <packagereq>bluebird-gtk2-theme</packagereq>
       <packagereq>bluebird-gtk3-theme</packagereq>
       <packagereq>bluebird-xfwm4-theme</packagereq>
-      <packagereq>greybird-gtk2-theme</packagereq>
-      <packagereq>greybird-gtk3-theme</packagereq>
+      <packagereq>dnfdragora-updater</packagereq>
+      <packagereq>greybird-light-theme</packagereq>
+      <packagereq>greybird-dark-theme</packagereq>
       <packagereq>greybird-xfce4-notifyd-theme</packagereq>
       <packagereq>greybird-xfwm4-theme</packagereq>
       <packagereq>gtk-xfce-engine</packagereq>
       <packagereq>gvfs</packagereq>
       <packagereq>initial-setup-gui</packagereq>
-      <packagereq>lightdm-gtk</packagereq>
       <packagereq>openssh-askpass</packagereq>
+      <packagereq>vim-enhanced</packagereq>
       <packagereq>xdg-user-dirs-gtk</packagereq>
-      <packagereq>xfce4-about</packagereq>
       <packagereq>xfce4-appfinder</packagereq>
       <packagereq>xfce4-datetime-plugin</packagereq>
-      <packagereq>xfce4-fsguard-plugin</packagereq>
-      <packagereq>xfce4-panel</packagereq>
       <packagereq>xfce4-places-plugin</packagereq>
-      <packagereq>xfce4-power-manager</packagereq>
+      <packagereq>xfce4-pulseaudio-plugin</packagereq>
       <packagereq>xfce4-screenshooter-plugin</packagereq>
-      <packagereq>xfce4-session-engines</packagereq>
-      <packagereq>xfce4-session</packagereq>
-      <packagereq>xfce4-settings-qubes</packagereq>
-      <packagereq>xfce4-settings</packagereq>
+      <packagereq>xfce4-taskmanager</packagereq>
       <packagereq>xfce4-terminal</packagereq>
-      <packagereq>xfce4-whiskermenu-plugin</packagereq>
-      <packagereq>xfconf</packagereq>
-      <packagereq>xfdesktop</packagereq>
       <packagereq>xfwm4-theme-nodoka</packagereq>
       <packagereq>xfwm4-themes</packagereq>
-      <packagereq>xfwm4</packagereq>
       <packagereq>xscreensaver-base</packagereq>
-      <packagereq>dnfdragora</packagereq>
-      <packagereq>zenity</packagereq>
+      <packagereq>lightdm-gtk</packagereq>
+      <packagereq>xfce4-about</packagereq>
+      <packagereq>xfce4-panel</packagereq>
+      <packagereq>xfce4-power-manager</packagereq>
+      <packagereq>xfce4-session</packagereq>
+      <packagereq>xfce4-settings</packagereq>
+      <packagereq>xfconf</packagereq>
+      <packagereq>xfdesktop</packagereq>
+      <packagereq>xfwm4</packagereq>
     </packagelist>
   </group>
   <group>
