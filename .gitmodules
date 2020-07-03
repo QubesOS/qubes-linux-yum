@@ -1,0 +1,3 @@
+[submodule "meta-packages"]
+	path = meta-packages
+	url = https://github.com/QubesOS/qubes-meta-packages

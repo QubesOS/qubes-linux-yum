@@ -23,9 +23,34 @@ then
         mkdir -p "$release/$repo/$package_set/$dist/repodata"
         mkdir -p "$release/$repo/$package_set/$dist/rpm"
 
-        touch "$release/$repo/$package_set/$dist/repodata/.gitignore"
-        touch "$release/$repo/$package_set/$dist/rpm/.gitignore"
+        cat > "$release/$repo/$package_set/$dist/repodata/.gitignore" << EOF
+*.xml
+*.gz
+*.bz2
+*.metalink
+EOF
+        cat > "$release/$repo/$package_set/$dist/rpm/.gitignore" << EOF
+*.rpm
+EOF
 
-        ln -s "../../../comps-${package_set}.xml" "$release/$repo/$package_set/$dist/comps.xml"
+        ln -sf "../../../comps-${package_set}.xml" "$release/$repo/$package_set/$dist/comps.xml"
+    done
+fi
+
+if [[ $release =~ r[1-9].[0-9] ]]; then
+    for repo in templates-itl templates-itl-testing templates-community templates-community-testing
+    do
+        mkdir -p "$release/$repo/repodata"
+        mkdir -p "$release/$repo/rpm"
+
+        cat > "$release/$repo/repodata/.gitignore" << EOF
+*.xml
+*.gz
+*.bz2
+*.metalink
+EOF
+        cat > "$release/$repo/rpm/.gitignore" << EOF
+*.rpm
+EOF
     done
 fi

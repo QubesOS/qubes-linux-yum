@@ -101,6 +101,7 @@
       <packagereq type="mandatory">perf</packagereq>
       <packagereq type="mandatory">pinfo</packagereq>
       <packagereq type="mandatory">qubes-anaconda-addon</packagereq>
+      <packagereq type="mandatory">qubes-artwork-anaconda</packagereq>
       <packagereq type="mandatory">qubes-release-notes</packagereq>
       <packagereq type="mandatory">qubes-release</packagereq>
       <packagereq type="mandatory">quota</packagereq>
