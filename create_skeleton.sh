@@ -28,6 +28,7 @@ then
 *.gz
 *.bz2
 *.metalink
+*.xml.asc
 EOF
         cat > "$release/$repo/$package_set/$dist/rpm/.gitignore" << EOF
 *.rpm
@@ -48,6 +49,7 @@ if [[ $release =~ r[1-9].[0-9] ]]; then
 *.gz
 *.bz2
 *.metalink
+*.xml.asc
 EOF
         cat > "$release/$repo/rpm/.gitignore" << EOF
 *.rpm

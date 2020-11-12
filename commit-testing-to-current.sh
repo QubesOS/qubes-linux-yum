@@ -1,17 +1,16 @@
 #!/bin/sh
 
+set -eu
+if ! { [ $# -eq 3 ] && [ -n "$1" ]; }; then
+    echo "Usage: $0 <path-to-current-testing-repo-snapshot> \"<component list>\" <release-name>"
+    exit 1
+fi
+
 if [ -n "$3" ]; then
     RELS_TO_UPDATE=`basename "$3"`
-else
-    RELS_TO_UPDATE="`readlink current-release|tr -d /`"
 fi
 MIN_AGE=7
 #DRY=echo
-
-if [ -z "$1" ]; then
-    echo "Usage: $0 <path-to-current-testing-repo-snapshot> [\"<component list>\" [<release-name>]]"
-    exit 1
-fi
 
 repo_snapshot_dir="$1"
 components="$2"
