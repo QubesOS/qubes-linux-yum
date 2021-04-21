@@ -12,6 +12,7 @@ https://ftp.cc.uoc.gr/mirrors/linux/qubes/repo/yum
 https://ftp.icm.edu.pl/pub/os/qubes/repo/yum
 https://mirrors.dgplug.org/qubes/repo/yum
 https://mirrors.phx.ms/qubes/repo/yum
+https://qubesos-mirror.applied-privacy.net/repo/yum
 
 # disabling .onion by default
 #http://ftp.qubesos4rrrrz6n4.onion/repo/yum
