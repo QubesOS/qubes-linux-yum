@@ -16,7 +16,7 @@ release="$1"
 package_set="$2"
 dist="$3"
 
-if [[ $release =~ r[1-9].[0-9] ]] && [[ $package_set =~ (dom0|vm) ]] && [[ $dist =~ (fc[1-9][0-9]|centos[1-9][0-9]*) ]]
+if [[ $release =~ r[1-9].[0-9] ]] && [[ $package_set =~ (dom0|vm) ]] && [[ $dist =~ (fc[1-9][0-9]|centos[1-9][0-9]*|tumbleweed|leap[1-9][0-9]\.[0-9]) ]]
 then
     for repo in current current-testing security-testing unstable
     do
